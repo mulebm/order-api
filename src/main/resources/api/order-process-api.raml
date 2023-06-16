@@ -1,0 +1,184 @@
+#%RAML 1.0
+title: order-process-api
+description: T-Shirt Order API
+mediaType:
+  - application/json
+version: "1.0"
+protocols:
+  - HTTP
+/order:
+  post:
+    description: Create a new order
+    responses:
+      "201":
+        description: Order created
+        body:
+          type: OrderTShirt
+    body:
+      type: OrderTShirt
+    securedBy: []
+/order/{order_id}:
+  get:
+    description: Get order by order_id
+    responses:
+      "200":
+        body:
+          type: OrderResponse
+      "204":
+        description: Order not found
+      "404":
+        description: Order not found
+      "500":
+        description: Internal server error
+    securedBy: []
+types:
+  Customer:
+    properties:
+      customer_id:
+        example: 42
+        type: number
+        format: int
+      email:
+        example: max@mulesoft.com
+        type: string
+      name:
+        example: Max Mule
+        type: string
+      address1:
+        example: API Tower
+        type: string
+      address2:
+        example: 123 Main Street
+        type: string
+      city:
+        example: London
+        type: string
+      stateOrProvince:
+        example: London
+        type: string
+      postalCode:
+        example: W1 2BA
+        type: string
+      country:
+        example: United Kingdom
+        type: string
+  OrderItem:
+    properties:
+      order_item_id:
+        example: 765
+        type: number
+        format: int
+      order_id:
+        example: 3
+        type: number
+        format: int
+      productCode:
+        example: TS99
+        type: string
+  OrderItems:
+    items:
+      type: OrderItem
+    example: |
+      [
+        {
+          "order_item_id": 1,
+          "order_id": 1,
+          "productCode": "TS99"
+        },
+        {
+          "order_item_id": 2,
+          "order_id": 1,
+          "productCode": "TS42"
+        }
+      ]
+  Order:
+    properties:
+      order_id:
+        example: 999
+        type: number
+        format: int
+      customer_id:
+        example: 42
+        type: number
+        format: int
+      order_date:
+        example: 2023-06-14T16:52:28.000Z
+        type: datetime
+        format: rfc3339
+      status:
+        enum:
+          - pending
+          - processing
+          - shipped
+          - onhold
+          - cancelled
+          - refunded
+        example: processing
+        type: string
+  Orders:
+    items:
+      type: Order
+    example: |
+      [
+        {
+          "order_id": 1,
+          "customer_id": 42,
+          "order_date": "2023-06-14T16:52:28.000Z",
+          "status": "processing"
+        },
+        {
+          "order_id": 2,
+          "customer_id": 23,
+          "order_date": "2023-06-15T09:20:10.000Z",
+          "status": "shipped"
+        }
+      ]
+  OrderTShirt:
+    properties:
+      size:
+        type: string
+        enum: [XS,S,M,L,XL,XXL,NA]
+        example: S
+      email:
+        type: string
+        example: max@mulesoft.com
+      name:
+        type: string
+        example: Max Mule
+      address1:
+        type: string
+        example: API Tower
+      address2:
+        type: string
+        example: 123 Main Street
+      city:
+        type: string
+        example: New York
+      stateOrProvince:
+        type: string
+        example: New York
+      postalCode:
+        type: string
+        example: 1235XYZ
+      country:
+        type: string
+        example: USA
+  OrderResponse:
+    properties:
+      size:
+        type: string
+        enum: [XS,S,M,L,XL,XXL,NA]
+        example: S
+      order_id:
+        type: string
+        example: "2322224"
+      status:
+        type: string
+        enum:
+          - pending
+          - processing
+          - shipped
+          - onhold
+          - cancelled
+          - refunded
+        example: processing
